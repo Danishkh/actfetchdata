@@ -20,22 +20,27 @@ export default class TableComponent extends Component {
 
     let authString = "Basic YXBpdXNlcjpwYXNzd29yZA==";
 
-    fetch(`https://techpros-cv-srv-dev.herokuapp.com/consultants/listall/`, {
-       method: 'GET',
-       credentials: 'same-origin',
-       headers: {
-         'Content-Type': "application/json",
-         'Authorization': authString
-       }
-     })
-     .then(result=>result.json())
-     .then(items=>this.setState({items}))
+    var Request = unirest.get('https://techpros-cv-srv-dev.herokuapp.com/consultants/listall');
+    Request.followRedirect(true);
+    Request.header('Accept', 'application/json')
+        .auth({
+            user: 'apiuser',
+            pass: 'password',
+            sendImmediately: true
+        })
+        .end(function (response) {
+            console.log(response.body);
+    });
+
+    console.log('Vi er forbi');
+    }
 
   render() {
     return(
       <div>
         <br/><br/>
         <h1>Tom</h1>
+        <h3>Tom</h3>
       </div>
     )
   }
