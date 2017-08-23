@@ -3,7 +3,6 @@ import base64 from 'base-64';
 import { FormControl,FormGroup, Button, NavItem,Table, Nav,ListGroup,ListGroupItem,list } from 'react-bootstrap';
 var unirest = require('unirest');
 
-let counterTest = 0;
 
 export default class TableComponent extends Component {
 
@@ -18,21 +17,21 @@ export default class TableComponent extends Component {
     let authBase64 = base64.encode(encodePassord);
     console.log("Authorization:  " + authBase64);
 
-    let authString = "Basic YXBpdXNlcjpwYXNzd29yZA==";
+    let authString = "Basic " + authBase64;
 
-    var Request = unirest.get('https://techpros-cv-srv-dev.herokuapp.com/consultants/listall');
-    Request.followRedirect(true);
-    Request.header('Accept', 'application/json')
-        .auth({
-            user: 'apiuser',
-            pass: 'password',
-            sendImmediately: true
-        })
-        .end(function (response) {
-            console.log(response.body);
-    });
+    fetch(`https://techpros-cv-srv-dev.herokuapp.com/consultants/listall/`, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': "application/json",
+          'Access-Control-Allow-Origin': '*',
+          'redirect_uri': `https://techpros-cv-srv-dev.herokuapp.com/login`,
+          'Authorization': authString
+        }
+      })
+      .then(result=>result.json())
+      .then(items=>this.setState({items}))
 
-    console.log('Vi er forbi');
     }
 
   render() {
